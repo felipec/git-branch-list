@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+if STDOUT.isatty
+  $color = {
+    normal: "",
+    gray: "\e[30m",
+    red: "\e[31m",
+    green: "\e[32m",
+    yellow: "\e[33m",
+    blue: "\e[34m",
+    magenta: "\e[35m",
+    cyan: "\e[36m",
+    white: "\e[37m",
+    reset: "\e[m",
+  }
+else
+  $color = {}
+end
+
+$color.merge!({
+  current: $color[:green],
+  remote: $color[:red],
+  worktree: $color[:cyan],
+  local: $color[:normal],
+})
+
+$remote_prefix = 'remotes/'
+
+$remote_prefix = '' if ARGV.include?('-r') and !ARGV.include?('-a')
+
+local = '%%(if)%%(HEAD)%%(then)* %s%%(else)%%(if)%%(worktreepath)%%(then)+ %s%%(else)  %s%%(end)%%(end)' %
+  [ $color[:current], $color[:worktree], $color[:local] ]
+remote = '  %s' % [ $color[:remote] ]
+
+local << '%%(refname:lstrip=2)%s%%(if)%%(symref)%%(then) -> %%(symref:short)%%(end)' % [ $color[:reset] ]
+remote << '%s%%(refname:lstrip=2)%s%%(if)%%(symref)%%(then) -> %%(symref:short)%%(end)' % [ $remote_prefix, $color[:reset] ]
+
+fmt = '%%(if:notequals=refs/remotes)%%(refname:rstrip=-2)%%(then)%s%%(else)%s%%(end)' % [ local, remote ]
+
+system(*%W[git branch --list --format=#{fmt}] + ARGV)
