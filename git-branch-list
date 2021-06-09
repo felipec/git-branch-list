@@ -52,18 +52,19 @@ local = '%%(if)%%(HEAD)%%(then)* %s%%(else)%%(if)%%(worktreepath)%%(then)+ %s%%(
   [ $color[:current], $color[:worktree], $color[:local] ]
 remote = '  %s' % [ $color[:remote] ]
 
+local << '%%(align:%d,left)%%(refname:lstrip=2)%%(end)%s' % [ $max_width + 1, $color[:reset] ]
+remote << '%%(align:%d,left)%s%%(refname:lstrip=2)%%(end)%s' % [ $max_width + 1, $remote_prefix, $color[:reset] ]
+
+local << '%%(if)%%(upstream)%%(then)[%s%%(upstream:short)%s] %%(end)' %
+  [ $color[:upstream], $color [:reset] ]
+
 if $verbose
-  local << '%%(align:%d,left)%%(refname:lstrip=2)%%(end)%s' % [ $max_width + 1, $color[:reset] ]
-  local << '%%(if)%%(upstream)%%(then)[%s%%(upstream:short)%s] %%(end)%%(contents:subject)' %
-    [ $color[:upstream], $color [:reset] ]
-  remote << '%%(align:%d,left)%s%%(refname:lstrip=2)%%(end)%s' \
-    '%%(if)%%(symref)%%(then)-> %%(symref:short)' \
-    '%%(else)%%(contents:subject)%%(end)' %
-    [ $max_width + 1, $remote_prefix, $color[:reset] ]
+  local << '%%(contents:subject)' % []
+  remote << '%%(if)%%(symref)%%(then)-> %%(symref:short)' \
+    '%%(else)%%(contents:subject)%%(end)' % []
 else
-  local << '%%(refname:lstrip=2)%s%%(if)%%(symref)%%(then) -> %%(symref:short)%%(end)' % [ $color[:reset] ]
-  remote << '%s%%(refname:lstrip=2)%s%%(if)%%(symref)%%(then) -> %%(symref:short)%%(end)' %
-    [ $remote_prefix, $color[:reset] ]
+  local << '%%(if)%%(symref)%%(then)-> %%(symref:short)%%(end)' % []
+  remote << '%%(if)%%(symref)%%(then)-> %%(symref:short)%%(end)' % []
 end
 
 fmt = '%%(if:notequals=refs/remotes)%%(refname:rstrip=-2)%%(then)%s%%(else)%s%%(end)' % [ local, remote ]
