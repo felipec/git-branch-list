@@ -53,13 +53,13 @@ local = '%%(if)%%(HEAD)%%(then)* %s%%(else)%%(if)%%(worktreepath)%%(then)+ %s%%(
 remote = '  %s' % [ $color[:remote] ]
 
 if $verbose
-  local << '%%(align:%d,left)%%(refname:lstrip=2)%%(end)%s' % [ $max_width, $color[:reset] ]
+  local << '%%(align:%d,left)%%(refname:lstrip=2)%%(end)%s' % [ $max_width + 1, $color[:reset] ]
   local << '%%(if)%%(upstream)%%(then)[%s%%(upstream:short)%s] %%(end)%%(contents:subject)' %
     [ $color[:upstream], $color [:reset] ]
   remote << '%%(align:%d,left)%s%%(refname:lstrip=2)%%(end)%s' \
-    '%%(if)%%(symref)%%(then) -> %%(symref:short)' \
-    '%%(else) %%(contents:subject)%%(end)' %
-    [ $max_width, $remote_prefix, $color[:reset] ]
+    '%%(if)%%(symref)%%(then)-> %%(symref:short)' \
+    '%%(else)%%(contents:subject)%%(end)' %
+    [ $max_width + 1, $remote_prefix, $color[:reset] ]
 else
   local << '%%(refname:lstrip=2)%s%%(if)%%(symref)%%(then) -> %%(symref:short)%%(end)' % [ $color[:reset] ]
   remote << '%s%%(refname:lstrip=2)%s%%(if)%%(symref)%%(then) -> %%(symref:short)%%(end)' %
