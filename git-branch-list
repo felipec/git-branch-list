@@ -20,6 +20,7 @@ end
 $color.merge!({
   current: $color[:green],
   remote: $color[:red],
+  upstream: $color[:blue],
   worktree: $color[:cyan],
   local: $color[:normal],
 })
@@ -54,7 +55,8 @@ remote = '  %s' % [ $color[:remote] ]
 if $verbose
   local << '%%(align:%d,left)%%(refname:lstrip=2)%%(end)%s' % [ $max_width, $color[:reset] ]
   local << ' %%(objectname:short) ' % []
-  local << '%%(if)%%(upstream:track)%%(then)%%(upstream:track) %%(end)%%(contents:subject)' % []
+  local << '%%(if)%%(upstream)%%(then)[%s%%(upstream:short)%s] %%(end)%%(contents:subject)' %
+    [ $color[:upstream], $color [:reset] ]
   remote << '%%(align:%d,left)%s%%(refname:lstrip=2)%%(end)%s' \
     '%%(if)%%(symref)%%(then) -> %%(symref:short)' \
     '%%(else) %%(objectname:short) %%(contents:subject)%%(end)' %
