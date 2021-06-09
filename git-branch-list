@@ -24,11 +24,28 @@ $color.merge!({
   local: $color[:normal],
 })
 
+def calc_max_width
+  refs = []
+  refs << 'refs/heads/' if ARGV.include?('-a') || !ARGV.include?('-r')
+  refs << 'refs/remotes/' if ARGV.include?('-a') || ARGV.include?('-r')
+
+  IO.popen(%w[git for-each-ref --format=%(refname)] + refs) do |io|
+    io.each(chomp: true).map do |line|
+      if line.start_with?('refs/heads/')
+        line.length - 'refs/heads/'.length
+      else
+        $remote_prefix.length + line.length - 'refs/remotes/'.length
+      end
+    end.max
+  end
+end
+
 $remote_prefix = 'remotes/'
-$max_width = 40
 
 $remote_prefix = '' if ARGV.include?('-r') and !ARGV.include?('-a')
 $verbose = !!ARGV.delete('-v')
+
+$max_width = calc_max_width
 
 local = '%%(if)%%(HEAD)%%(then)* %s%%(else)%%(if)%%(worktreepath)%%(then)+ %s%%(else)  %s%%(end)%%(end)' %
   [ $color[:current], $color[:worktree], $color[:local] ]
