@@ -63,7 +63,6 @@ if $verbose
   remote << '%%(if)%%(symref)%%(then)-> %%(symref:short)' \
     '%%(else)%%(contents:subject)%%(end)' % []
 else
-  local << '%%(if)%%(symref)%%(then)-> %%(symref:short)%%(end)' % []
   remote << '%%(if)%%(symref)%%(then)-> %%(symref:short)%%(end)' % []
 end
 
