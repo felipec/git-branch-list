@@ -58,12 +58,12 @@ remote << '%%(align:%d,left)%s%%(refname:lstrip=2)%%(end)%s' % [ $max_width + 1,
 local << '%%(if)%%(upstream)%%(then)[%s%%(upstream:short)%s] %%(end)' %
   [ $color[:upstream], $color [:reset] ]
 
+remote << '%%(if)%%(symref)%%(then)[%s%%(symref:short)%s] %%(end)' %
+  [ $color[:upstream], $color [:reset] ]
+
 if $verbose
   local << '%%(contents:subject)' % []
-  remote << '%%(if)%%(symref)%%(then)-> %%(symref:short)' \
-    '%%(else)%%(contents:subject)%%(end)' % []
-else
-  remote << '%%(if)%%(symref)%%(then)-> %%(symref:short)%%(end)' % []
+  remote << '%%(contents:subject)' % []
 end
 
 fmt = '%%(if:notequals=refs/remotes)%%(refname:rstrip=-2)%%(then)%s%%(else)%s%%(end)' % [ local, remote ]
