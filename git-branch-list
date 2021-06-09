@@ -45,6 +45,7 @@ $remote_prefix = 'remotes/'
 
 $remote_prefix = '' if ARGV.include?('-r') and !ARGV.include?('-a')
 $verbose = !!ARGV.delete('-v')
+$track = !!ARGV.delete('-t')
 
 $max_width = calc_max_width
 
@@ -57,8 +58,9 @@ remote << '%%(align:%d,left)%s%%(refname:lstrip=2)%%(end)%s' % [ $max_width + 1,
 
 ss, se = $verbose ? [ '[', ']' ] : [ '', '' ]
 
-local << "%%(if)%%(upstream)%%(then)#{ss}%s%%(upstream:short)%s#{se} %%(end)" %
-  [ $color[:upstream], $color [:reset] ]
+track = $track ? '%(upstream:trackshort)' : ''
+local << "%%(if)%%(upstream)%%(then)#{ss}%s%%(upstream:short)%s%s#{se} %%(end)" %
+  [ $color[:upstream], $color [:reset], track ]
 
 remote << "%%(if)%%(symref)%%(then)#{ss}%s%%(symref:short)%s#{se} %%(end)" %
   [ $color[:upstream], $color [:reset] ]
