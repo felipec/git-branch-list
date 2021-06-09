@@ -25,15 +25,28 @@ $color.merge!({
 })
 
 $remote_prefix = 'remotes/'
+$max_width = 40
 
 $remote_prefix = '' if ARGV.include?('-r') and !ARGV.include?('-a')
+$verbose = !!ARGV.delete('-v')
 
 local = '%%(if)%%(HEAD)%%(then)* %s%%(else)%%(if)%%(worktreepath)%%(then)+ %s%%(else)  %s%%(end)%%(end)' %
   [ $color[:current], $color[:worktree], $color[:local] ]
 remote = '  %s' % [ $color[:remote] ]
 
-local << '%%(refname:lstrip=2)%s%%(if)%%(symref)%%(then) -> %%(symref:short)%%(end)' % [ $color[:reset] ]
-remote << '%s%%(refname:lstrip=2)%s%%(if)%%(symref)%%(then) -> %%(symref:short)%%(end)' % [ $remote_prefix, $color[:reset] ]
+if $verbose
+  local << '%%(align:%d,left)%%(refname:lstrip=2)%%(end)%s' % [ $max_width, $color[:reset] ]
+  local << ' %%(objectname:short) ' % []
+  local << '%%(if)%%(upstream:track)%%(then)%%(upstream:track) %%(end)%%(contents:subject)' % []
+  remote << '%%(align:%d,left)%s%%(refname:lstrip=2)%%(end)%s' \
+    '%%(if)%%(symref)%%(then) -> %%(symref:short)' \
+    '%%(else) %%(objectname:short) %%(contents:subject)%%(end)' %
+    [ $max_width, $remote_prefix, $color[:reset] ]
+else
+  local << '%%(refname:lstrip=2)%s%%(if)%%(symref)%%(then) -> %%(symref:short)%%(end)' % [ $color[:reset] ]
+  remote << '%s%%(refname:lstrip=2)%s%%(if)%%(symref)%%(then) -> %%(symref:short)%%(end)' %
+    [ $remote_prefix, $color[:reset] ]
+end
 
 fmt = '%%(if:notequals=refs/remotes)%%(refname:rstrip=-2)%%(then)%s%%(else)%s%%(end)' % [ local, remote ]
 
