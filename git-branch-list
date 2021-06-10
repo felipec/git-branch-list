@@ -43,6 +43,9 @@ end
 $verbose = !!ARGV.delete('-v')
 $track = !!ARGV.delete('-t')
 
+# Substitute unhelpful patterns: `foo` -> `foo*`
+ARGV.map! { |e| e.sub(%r[^[^-].*(?!\*)$], '\&*') }
+
 $max_width = calc_max_width
 
 fmt = "%(if:equals=refs/remotes)%(refname:rstrip=-2)%(then)  #{$color[:remote]}%(else)" \
