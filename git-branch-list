@@ -30,20 +30,13 @@ def calc_max_width
   refs << 'refs/heads/' if ARGV.include?('-a') || !ARGV.include?('-r')
   refs << 'refs/remotes/' if ARGV.include?('-a') || ARGV.include?('-r')
 
-  IO.popen(%w[git for-each-ref --format=%(refname)] + refs) do |io|
+  IO.popen(%w[git for-each-ref --format=%(refname:lstrip=2)] + refs) do |io|
     io.each(chomp: true).map do |line|
-      if line.start_with?('refs/heads/')
-        line.length - 'refs/heads/'.length
-      else
-        $remote_prefix.length + line.length - 'refs/remotes/'.length
-      end
+      line.length
     end.max
   end
 end
 
-$remote_prefix = 'remotes/'
-
-$remote_prefix = '' if ARGV.include?('-r') and !ARGV.include?('-a')
 $verbose = !!ARGV.delete('-v')
 $track = !!ARGV.delete('-t')
 
@@ -54,7 +47,7 @@ local = '%%(if)%%(HEAD)%%(then)* %s%%(else)%%(if)%%(worktreepath)%%(then)+ %s%%(
 remote = '  %s' % [ $color[:remote] ]
 
 local << '%%(align:%d,left)%%(refname:lstrip=2)%%(end)%s' % [ $max_width + 1, $color[:reset] ]
-remote << '%%(align:%d,left)%s%%(refname:lstrip=2)%%(end)%s' % [ $max_width + 1, $remote_prefix, $color[:reset] ]
+remote << '%%(align:%d,left)%%(refname:lstrip=2)%%(end)%s' % [ $max_width + 1, $color[:reset] ]
 
 ss, se = $verbose ? [ '[', ']' ] : [ '', '' ]
 
