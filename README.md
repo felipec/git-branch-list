@@ -91,6 +91,28 @@ Another example; you can enable a useful sorting of branches with the following 
 
 But with `git branch-list` you don't need to; it's sorted by default.
 
+## Performance
+
+In order to test the performance I'll use a real repository:
+[Linux](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git). I create 100 branches
+at completely random points over the past 10 years.
+
+After warming up the cache:
+
+### Official `git branch --list --verbose`
+
+    21.804 seconds
+    21.614 seconds
+    21.415 seconds
+
+### `git branch-list`
+
+    0.104 seconds
+    0.107 seconds
+    0.107 seconds
+
+Is there even a question?
+
 ## Conclusion
 
 `git branch-list` is the same as `git branch --list`... But **better**.
