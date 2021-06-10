@@ -90,3 +90,7 @@ Another example; you can enable a useful sorting of branches with the following 
             sort = -committerdate
 
 But with `git branch-list` you don't need to; it's sorted by default.
+
+## Conclusion
+
+`git branch-list` is the same as `git branch --list`... But **better**.
