@@ -2,7 +2,7 @@
 
 The current version of `git branch --list` mostly works, but it's slow and cumbersome. While this
 could easily be fixed in git itself, every patch that tries to improve the user interface is
-de facto rejected.
+[de facto rejected](https://lore.kernel.org/git/YL8KiiGXF8LdGmQ2@coredump.intra.peff.net/).
 
 An external command `git branch-list` is the solution.
 
