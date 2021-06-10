@@ -64,3 +64,29 @@ If you want even more information you can specify the `-v` option:
     * master [origin/master<] Linux 5.12
 
 We get all the most useful information at all levels (who cares what the object id is?).
+
+## Convenience
+
+You can get some of the advantages of `git branch-list` from the official `git branch`, whoever, you
+need to know specifically which options to enable.
+
+For example, let's say you have several branches that update documentation prefixed with `doc-`.
+With the official `git branch` you could do something like:
+
+    git branch --list doc-*
+
+This works, however, 1) it doesn't work unless you specify `--list`, and 2) you need to add the
+asterisk (`*`).
+
+On the other hand with `git branch-list`:
+
+    git branch-list doc
+
+You don't need any option, nor asterisk. It just works straightaway.
+
+Another example; you can enable a useful sorting of branches with the following configuration:
+
+    [branch]
+            sort = -committerdate
+
+But with `git branch-list` you don't need to; it's sorted by default.
