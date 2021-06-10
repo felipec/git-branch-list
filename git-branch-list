@@ -65,11 +65,7 @@ local << "%%(if)%%(upstream)%%(then)#{ss}%s%%(upstream:short)%s%s#{se} %%(end)" 
 remote << "%%(if)%%(symref)%%(then)#{ss}%s%%(symref:short)%s#{se} %%(end)" %
   [ $color[:upstream], $color [:reset] ]
 
-if $verbose
-  local << '%%(contents:subject)' % []
-  remote << '%%(contents:subject)' % []
-end
-
 fmt = '%%(if:notequals=refs/remotes)%%(refname:rstrip=-2)%%(then)%s%%(else)%s%%(end)' % [ local, remote ]
+fmt << '%(contents:subject)' if $verbose
 
 system(*%W[git branch --list --sort=-committerdate --format=#{fmt}] + ARGV)
