@@ -31,9 +31,7 @@ def calc_max_width
   refs << 'refs/remotes/' if ARGV.include?('-a') || ARGV.include?('-r')
 
   IO.popen(%w[git for-each-ref --format=%(refname:lstrip=2)] + refs) do |io|
-    io.each(chomp: true).map do |line|
-      line.length
-    end.max
+    io.each.map(&:length).max - 1
   end
 end
 
