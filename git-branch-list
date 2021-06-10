@@ -35,6 +35,11 @@ def calc_max_width
   end
 end
 
+def otherref(other, track = '')
+  ss, se = $verbose ? [ '[', ']' ] : [ '', '' ]
+  "%(if)%(#{other})%(then)#{ss}#{$color[:upstream]}%(#{other}:short)#{$color[:reset]}#{track}#{se} %(end)"
+end
+
 $verbose = !!ARGV.delete('-v')
 $track = !!ARGV.delete('-t')
 
@@ -47,14 +52,8 @@ fmt = "%(if:equals=refs/remotes)%(refname:rstrip=-2)%(then)  #{$color[:remote]}%
 
 fmt << "%(align:#{$max_width + 1},left)%(refname:lstrip=2)%(end)#{$color[:reset]}"
 
-ss, se = $verbose ? [ '[', ']' ] : [ '', '' ]
-
-track = $track ? '%(upstream:trackshort)' : ''
-local = "%(if)%(upstream)%(then)#{ss}#{$color[:upstream]}%(upstream:short)#{$color[:reset]}" \
-  "#{track}#{se} %(end)"
-
-remote = "%(if)%(symref)%(then)#{ss}#{$color[:upstream]}%(symref:short)#{$color[:reset]}" \
-  "#{se} %(end)"
+local = otherref('upstream', $track ? '%(upstream:trackshort)' : '')
+remote = otherref('symref')
 
 fmt << "%(if:notequals=refs/remotes)%(refname:rstrip=-2)%(then)#{local}%(else)#{remote}%(end)"
 fmt << '%(contents:subject)' if $verbose
