@@ -40,23 +40,23 @@ $track = !!ARGV.delete('-t')
 
 $max_width = calc_max_width
 
-local = '%%(if)%%(HEAD)%%(then)* %s%%(else)%%(if)%%(worktreepath)%%(then)+ %s%%(else)  %s%%(end)%%(end)' %
-  [ $color[:current], $color[:worktree], $color[:local] ]
-remote = '  %s' % [ $color[:remote] ]
+fmt = "%(if:equals=refs/remotes)%(refname:rstrip=-2)%(then)  #{$color[:remote]}%(else)" \
+  "%(if)%(HEAD)%(then)* #{$color[:current]}%(else)" \
+  "%(if)%(worktreepath)%(then)+ #{$color[:worktree]}%(else)" \
+  "  #{$color[:local]}%(end)%(end)%(end)"
 
-local << '%%(align:%d,left)%%(refname:lstrip=2)%%(end)%s' % [ $max_width + 1, $color[:reset] ]
-remote << '%%(align:%d,left)%%(refname:lstrip=2)%%(end)%s' % [ $max_width + 1, $color[:reset] ]
+fmt << "%(align:#{$max_width + 1},left)%(refname:lstrip=2)%(end)#{$color[:reset]}"
 
 ss, se = $verbose ? [ '[', ']' ] : [ '', '' ]
 
 track = $track ? '%(upstream:trackshort)' : ''
-local << "%%(if)%%(upstream)%%(then)#{ss}%s%%(upstream:short)%s%s#{se} %%(end)" %
-  [ $color[:upstream], $color [:reset], track ]
+local = "%(if)%(upstream)%(then)#{ss}#{$color[:upstream]}%(upstream:short)#{$color[:reset]}" \
+  "#{track}#{se} %(end)"
 
-remote << "%%(if)%%(symref)%%(then)#{ss}%s%%(symref:short)%s#{se} %%(end)" %
-  [ $color[:upstream], $color [:reset] ]
+remote = "%(if)%(symref)%(then)#{ss}#{$color[:upstream]}%(symref:short)#{$color[:reset]}" \
+  "#{se} %(end)"
 
-fmt = '%%(if:notequals=refs/remotes)%%(refname:rstrip=-2)%%(then)%s%%(else)%s%%(end)' % [ local, remote ]
+fmt << "%(if:notequals=refs/remotes)%(refname:rstrip=-2)%(then)#{local}%(else)#{remote}%(end)"
 fmt << '%(contents:subject)' if $verbose
 
 system(*%W[git branch --list --sort=-committerdate --format=#{fmt}] + ARGV)
