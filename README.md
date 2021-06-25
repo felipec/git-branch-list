@@ -115,4 +115,4 @@ Is there even a question?
 
 ## Conclusion
 
-`git branch-list` is the same as `git branch --list`... But **better**.
+`git branch-list` is the same as `git branch --list`... But much **better**.
