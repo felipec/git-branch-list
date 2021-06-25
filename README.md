@@ -6,6 +6,8 @@ could easily be fixed in git itself, every patch that tries to improve the user 
 
 An external command `git branch-list` is the solution.
 
+![screenshot](https://i.imgur.com/zYaqiOY.png)
+
 ## Advantages
 
 Why is `git branch-list` better?
