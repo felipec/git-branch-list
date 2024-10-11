@@ -118,3 +118,9 @@ Is there even a question?
 ## Conclusion
 
 `git branch-list` is the same as `git branch --list`... But much **better**.
+
+## Installation
+
+Copy the script anywhere in your `$PATH` and make it executable, or run `make
+install` which will install it by default to your `~/bin/` directory (make sure
+it's in your `$PATH`).
